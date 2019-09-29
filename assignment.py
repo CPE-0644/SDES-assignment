@@ -1,56 +1,66 @@
 from sdes import *
 
-sdes = SDES()
+def attacking_sdes():
 
-# sample use
-cipher = sdes.encrypt(key='0010010111', plain='11001101')
-plain = sdes.decrypt(key='0010010111', cipher=cipher)
-print(cipher, plain)
+    sdes = SDES()
 
-ciphers =  ['0b11001101','0b11000011','0b10111001','0b11110111','0b1101000','0b10111001','0b11110111','0b111000','0b111000','0b1101000','0b11001101','0b10110110','0b10111001','0b10111001','0b11000011','0b110','0b11000011','0b111000','0b111000','0b10110110','0b1101000','0b110','0b11001101','0b1100011','0b11110111','0b10111001','0b1100011','0b11000011','0b1100011','0b1101000','0b111000','0b10110110','0b10110110','0b1101000','0b111000','0b111000','0b10111001','0b11001101','0b10110110','0b11000011','0b110','0b10111001','0b11001101','0b11110111','0b111000','0b11000011','0b1100011','0b10110110','0b10111001','0b110','0b1101000','0b11001101','0b10110110','0b110','0b1100011','0b11001101','0b11110111','0b110','0b110','0b11110111','0b10110110','0b1010111','0b111000','0b10111001','0b1010111','0b10111001','0b10110110','0b10111001','0b1100011','0b11001101','0b111000','0b11110111','0b10111001','0b110','0b11000011','0b1101000','0b111000', ]
-student_number = '590610644'
+    # sample use
+    # cipher = sdes.encrypt(key='1111011010', plain='01001101')
+    # plain = sdes.decrypt(key='1111011010', cipher='01101001')
+    # print(cipher, plain)
 
-count_correct_cipher = 0
+    ciphers =  ['0b11001101','0b11000011','0b10111001','0b11110111','0b1101000','0b10111001','0b11110111','0b111000','0b111000','0b1101000','0b11001101','0b10110110','0b10111001','0b10111001','0b11000011','0b110','0b11000011','0b111000','0b111000','0b10110110','0b1101000','0b110','0b11001101','0b1100011','0b11110111','0b10111001','0b1100011','0b11000011','0b1100011','0b1101000','0b111000','0b10110110','0b10110110','0b1101000','0b111000','0b111000','0b10111001','0b11001101','0b10110110','0b11000011','0b110','0b10111001','0b11001101','0b11110111','0b111000','0b11000011','0b1100011','0b10110110','0b10111001','0b110','0b1101000','0b11001101','0b10110110','0b110','0b1100011','0b11001101','0b11110111','0b110','0b110','0b11110111','0b10110110','0b1010111','0b111000','0b10111001','0b1010111','0b10111001','0b10110110','0b10111001','0b1100011','0b11001101','0b111000','0b11110111','0b10111001','0b110','0b11000011','0b1101000','0b111000', ]
+    student_number = '590610644'
 
-def fill_character_bit(bit, num):
-    if len(num) < bit:
-        num = ((bit - len(num)) * '0') + num
-    return num
+    da_key = 0
 
-def is_plain_equal_student_number(key, plains):
-    return student_number[0] == plains[0] and student_number[1] == plains[1] and student_number[2] == plains[2] and student_number[3] == plains[3] and student_number[4] == plains[4] and student_number[5] == plains[5] and student_number[6] == plains[6] and student_number[7] == plains[7] and student_number[8] == plains[8] 
+    print('Cipher text: ')
+    for cipher in ciphers:
+        print(cipher, end=' ')
 
-    
-for i in range(1024):
-    key = str(bin(i))[2:]
-    key = fill_character_bit(10, key)
+    # brute-force key
+    for i in range(1024):
+        key = str(bin(i))[2:]
+        key = key.zfill(10)
 
-    # count_correct_cipher = 0
-    for j in range(len(student_number)):
+        cipher_list = []
+        count_correct_cipher = 0
 
-        cipher = str(ciphers[0])[2:]
-        cipher = fill_character_bit(8, cipher)
+        # generate number(0-9) cipher by that key 
+        for num in range(10):
 
-        plain = sdes.decrypt(key=key, cipher= cipher)
-    
-        if str(int(plain,2)) == student_number[j]:
-            print('key:', str(key), '->' , str(int(plain,2))  )
-            count_correct_cipher+=1
+            plain = bin(ord(str(num)))[2:]
+            plain = plain.zfill(8)
 
-        if(count_correct_cipher == len(student_number)):
-            print(key)
-    
-    # 
-    # plains = [
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[0])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[1])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[2])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[3])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[4])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[5])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[6])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[7])[2:])),
-    #     sdes.decrypt(key=key, cipher= fill_character_bit(8, str(ciphers[8])[2:])),
-    # ]
+            cipher = sdes.encrypt(key=key, plain= plain)
+            cipher_list.append(cipher)
 
-    # print(is_plain_equal_student_number(str(int(key,2)), plains))
+        # check if those ciphers are related with student_number
+        for index,number in enumerate(student_number):
+            if(cipher_list[int(number)] == ciphers[index][2:].zfill(8)):
+                count_correct_cipher += 1
+            else: 
+                break
+        # all correct -> get key
+        if(count_correct_cipher >= 9):
+            da_key = str(bin(i))[2:].zfill(10)
+            print('\n\nFounded key:', da_key)
+
+    plain_text = []
+
+    # use the key to decrypt the cipher text
+    for cipher in ciphers:
+        cipher = str(cipher[2:].zfill(8))
+        plain = sdes.decrypt(key = da_key, cipher = cipher)
+        
+        plain = chr(int(plain,2))
+
+        plain_text.append(plain)
+
+
+    print('\nPlain text:')
+    for text in plain_text:
+        print(text, end=' ')
+
+if __name__ == '__main__':
+    attacking_sdes()
